@@ -65,3 +65,5 @@ export const joinPushEventRoom = PushEvent.joinRoom;
 export const addPushEventListener = PushEvent.addListener;
 export const removePushEventListener = PushEvent.removeListener;
 export const addMultiplePushEventListener = PushEvent.addMultipleListeners;
+
+export default {};

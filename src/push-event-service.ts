@@ -20,7 +20,7 @@ export class EventPushService {
     });
   }
 
-  static send<T>(data: EventPushArgs) {
+  static send(data: EventPushArgs) {
     EventPushService.subscriber?.next({ data });
   }
 }
@@ -29,3 +29,5 @@ new EventPushService();
 
 export const sendPushEvent = EventPushService.send;
 export const initPushEventSubscription = () => EventPushService.subscription;
+
+export default {};
