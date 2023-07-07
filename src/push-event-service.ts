@@ -29,5 +29,3 @@ new EventPushService();
 
 export const sendPushEvent = EventPushService.send;
 export const initPushEventSubscription = () => EventPushService.subscription;
-
-export default {};

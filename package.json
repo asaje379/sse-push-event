@@ -8,7 +8,7 @@
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "build": "tsc && esbuild src/*.ts --outdir=dist --minify --bundle --packages=external"
+    "build": "tsc && esbuild src/*.ts --outdir=dist --minify --packages=external"
   },
   "files": [
     "dist"
