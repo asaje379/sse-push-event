@@ -1,7 +1,7 @@
 {
   "name": "@asaje/sse-push-event",
   "version": "1.0.1",
-  "main": "index.js",
+  "main": "./dist/main.js",
   "license": "MIT",
   "devDependencies": {
     "esbuild": "^0.18.11",
@@ -9,5 +9,13 @@
   },
   "scripts": {
     "build": "tsc && esbuild src/*.ts --outdir=dist --minify"
+  },
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/main.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asaje379/sse-push-event.git"
   }
 }
