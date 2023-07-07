@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "CommonJS",
     "rootDir": "./src",
     "declaration": true,
-    // "emitDeclarationOnly": true,
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    "moduleResolution": "NodeNext"
+    "skipLibCheck": true
   }
 }
