@@ -1,6 +1,6 @@
 {
   "name": "@asaje/sse-push-event",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "./dist/main.js",
   "license": "MIT",
   "devDependencies": {
