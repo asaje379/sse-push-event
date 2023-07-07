@@ -1,6 +1,6 @@
 {
   "name": "@asaje/sse-push-event-client",
-  "version": "1.0.9",
+  "version": "1.0.0",
   "main": "./dist/main.js",
   "license": "MIT",
   "devDependencies": {
@@ -16,6 +16,6 @@
   "types": "./dist/main.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/asaje379/sse-push-event.git"
+    "url": "https://github.com/asaje379/sse-push-event.git#client"
   }
 }
