@@ -4,7 +4,7 @@
     "module": "ESNext",
     "rootDir": "./src",
     "declaration": true,
-    "emitDeclarationOnly": true,
+    // "emitDeclarationOnly": true,
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
