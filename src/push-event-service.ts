@@ -30,7 +30,7 @@ export class EventPushService {
 
   destroy() {
     EventPushService.subscriptions = EventPushService.subscriptions.filter(
-      (sub) => sub.id === this.id,
+      (sub) => sub.id !== this.id,
     );
   }
 }
