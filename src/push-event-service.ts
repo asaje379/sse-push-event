@@ -1,31 +1,47 @@
-import { Observable, Subscriber } from 'rxjs';
-import { EventPushArgs } from './push-event.typings';
+import { Observable } from 'rxjs';
+import { randomUUID } from 'crypto';
+import { EventPushArgs, EventWithId } from './push-event.typings';
 
 export class EventPushService {
-  static subscription: Observable<any> | null = null;
-  private static subscriber: Subscriber<any> | undefined = undefined;
-  private static instance: EventPushService | null;
+  static subscriptions: EventWithId[] = [];
+  private id: string = randomUUID();
 
-  constructor() {
-    if (!EventPushService.instance) {
-      this.init();
-      EventPushService.instance = this;
-    }
-    return EventPushService.instance;
+  init() {
+    const subscription = new Observable((subscriber) => {
+      EventPushService.addEvent({ id: this.id, subscription, subscriber });
+    });
+
+    return subscription;
   }
 
-  private init() {
-    EventPushService.subscription = new Observable((subscriber) => {
-      EventPushService.subscriber = subscriber;
-    });
+  private static addEvent(event: EventWithId) {
+    const existingEvent = EventPushService.subscriptions.find(
+      (sub) => sub.id === event.id,
+    );
+
+    if (!existingEvent) {
+      EventPushService.subscriptions.push(event);
+    }
   }
 
   static send(data: EventPushArgs) {
-    EventPushService.subscriber?.next({ data });
+    EventPushService.subscriptions.map((ev) => ev.subscriber.next({ data }));
+  }
+
+  destroy() {
+    EventPushService.subscriptions = EventPushService.subscriptions.filter(
+      (sub) => sub.id === this.id,
+    );
   }
 }
 
-new EventPushService();
+export function sendPushEvent(event: EventPushArgs) {
+  EventPushService.send(event);
+}
 
-export const sendPushEvent = EventPushService.send;
-export const initPushEventSubscription = () => EventPushService.subscription;
+export function initPushEventSubscription() {
+  const eventPush = new EventPushService();
+  const subscription = eventPush.init();
+
+  return { eventPush, subscription };
+}

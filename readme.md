@@ -21,8 +21,10 @@ yarn add @asaje/sse-push-event-server
 ```ts
 // Example of NestJS controller
 @Sse('events')
-notify(): Observable<any> {
-  return initPushEventSubscription();
+connectSse(@Res() res: Response) {
+  const { eventPush, subscription } = initPushEventSubscription();
+  res.on('close', () => eventPush.destroy());
+  return subscription;
 }
 
 
