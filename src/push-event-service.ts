@@ -26,7 +26,7 @@ export class EventPushService {
   static send(data: EventPushArgs) {
     const ids: string[] = [];
     for (const sub of EventPushService.subjects) {
-      sub.value.next(data);
+      sub.value.next({ data });
       ids.push(sub.id);
     }
     console.log(`Subject sent to : ${ids.join(' ; ')}`);
