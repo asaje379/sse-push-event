@@ -1,37 +1,35 @@
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { randomUUID } from 'crypto';
-import { EventPushArgs, EventWithId } from './push-event.typings';
+import { EventPushArgs, SubjectDefinition, WithId } from './push-event.typings';
 
 export class EventPushService {
-  static subscriptions: EventWithId[] = [];
-  private id: string = randomUUID();
+  static subjects: WithId<SubjectDefinition>[] = [];
 
   init() {
-    const subscription = new Observable((subscriber) => {
-      EventPushService.addEvent({ id: this.id, subscription, subscriber });
-    });
-
-    return subscription;
+    const subject = new Subject();
+    const id = randomUUID();
+    EventPushService.subjects.push({ id, value: subject });
+    return {
+      value: subject.asObservable(),
+      destroy: () => this.removeSubject(id),
+    };
   }
 
-  private static addEvent(event: EventWithId) {
-    const existingEvent = EventPushService.subscriptions.find(
-      (sub) => sub.id === event.id,
+  removeSubject(id: string) {
+    const subjectIndex = EventPushService.subjects.findIndex(
+      (sub) => sub.id === id,
     );
-
-    if (!existingEvent) {
-      EventPushService.subscriptions.push(event);
-    }
+    EventPushService.subjects.splice(subjectIndex, 1);
+    console.log(`Subject ${id} destroyed`);
   }
 
   static send(data: EventPushArgs) {
-    EventPushService.subscriptions.map((ev) => ev.subscriber.next({ data }));
-  }
-
-  destroy() {
-    EventPushService.subscriptions = EventPushService.subscriptions.filter(
-      (sub) => sub.id !== this.id,
-    );
+    const ids: string[] = [];
+    for (const sub of EventPushService.subjects) {
+      sub.value.next(data);
+      ids.push(sub.id);
+    }
+    console.log(`Subject sent to : ${ids.join(' ; ')}`);
   }
 }
 
@@ -41,7 +39,5 @@ export function sendPushEvent(event: EventPushArgs) {
 
 export function initPushEventSubscription() {
   const eventPush = new EventPushService();
-  const subscription = eventPush.init();
-
-  return { eventPush, subscription };
+  return eventPush.init();
 }

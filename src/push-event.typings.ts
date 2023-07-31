@@ -1,4 +1,4 @@
-import { Observable, Subscriber } from 'rxjs';
+import { Subject } from 'rxjs';
 
 export type EventPushArgs = {
   room?: string;
@@ -6,8 +6,7 @@ export type EventPushArgs = {
   data: any;
 };
 
-export type EventWithId = {
-  id: string;
-  subscription: Observable<any>;
-  subscriber: Subscriber<any>;
+export type WithId<T> = T & { id: string };
+export type SubjectDefinition = {
+  value: Subject<unknown>;
 };
