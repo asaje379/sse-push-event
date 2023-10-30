@@ -16,7 +16,7 @@ class PushEvent {
   static init(url: string) {
     PushEvent.url = url;
     if (!PushEvent.eventSource) {
-      this.connect();
+      PushEvent.connect();
     }
   }
 
