@@ -5,6 +5,7 @@ class PushEvent {
   static rooms: string[] = [];
   static eventSource: EventSource | undefined = undefined;
   static events: Record<string, PushEventCallback> = {};
+  static url: string;
 
   static joinRoom(room: string) {
     if (!PushEvent.rooms.includes(room)) {
@@ -13,30 +14,31 @@ class PushEvent {
   }
 
   static init(url: string) {
+    PushEvent.url = url;
     if (!PushEvent.eventSource) {
-      PushEvent.eventSource = new EventSource(url);
-
-      PushEvent.eventSource?.addEventListener(
-        'message',
-        ({ data }: MessageEvent) => {
-          const {
-            data: result,
-            event,
-            room,
-          } = JSON.parse(data) as EventPushArgs;
-
-          if (!(event in PushEvent.events)) return;
-
-          const cb = PushEvent.events[event];
-
-          if (!room) {
-            return cb(result);
-          }
-
-          if (PushEvent.rooms.includes(room)) return cb(result);
-        },
-      );
+      this.connect();
     }
+  }
+
+  static connect() {
+    PushEvent.eventSource = new EventSource(PushEvent.url);
+
+    PushEvent.eventSource?.addEventListener(
+      'message',
+      ({ data }: MessageEvent) => {
+        const { data: result, event, room } = JSON.parse(data) as EventPushArgs;
+
+        if (!(event in PushEvent.events)) return;
+
+        const cb = PushEvent.events[event];
+
+        if (!room) {
+          return cb(result);
+        }
+
+        if (PushEvent.rooms.includes(room)) return cb(result);
+      },
+    );
   }
 
   static addListener(event: string, cb: PushEventCallback) {
@@ -61,7 +63,15 @@ class PushEvent {
 }
 
 export const initPushEvent = PushEvent.init;
+export const reconnect = PushEvent.connect;
 export const joinPushEventRoom = PushEvent.joinRoom;
 export const addPushEventListener = PushEvent.addListener;
 export const removePushEventListener = PushEvent.removeListener;
 export const addMultiplePushEventListener = PushEvent.addMultipleListeners;
+export const describeSse = () => {
+  return {
+    rooms: PushEvent.rooms,
+    eventSource: PushEvent.eventSource,
+    events: PushEvent.events,
+  };
+};
